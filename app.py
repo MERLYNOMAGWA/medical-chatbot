@@ -40,3 +40,21 @@ qa=RetrievalQA.from_chain_type(
     retriever=docsearch.as_retriever(search_kwargs={'k': 2}),
     return_source_documents=True, 
     chain_type_kwargs=chain_type_kwargs)
+
+@app.route("/")
+def index():
+    return render_template('chat.html')
+
+
+@app.route("/get", methods=["GET", "POST"])
+def chat():
+    msg = request.form["msg"]
+    input = msg
+    print(input)
+    result=qa({"query": input})
+    print("Response : ", result["result"])
+    return str(result["result"])
+
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port= 8080, debug= True)
